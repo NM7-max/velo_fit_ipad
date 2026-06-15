@@ -1,19 +1,19 @@
-# VeloFit iPad PWA v17
+# VeloFit iPad PWA v18
 
-Version corrigée :
-- cadre vidéo fixe : la vidéo sélectionnée ne grossit plus la zone d'affichage ;
-- MediaPipe plus rapide : modèle Lite, essai GPU puis fallback CPU ;
-- moins de retard : analyse environ 30 FPS et lissage plus réactif ;
-- interface conservée proche de la version PC.
+Version avec badge jaune `2` visible en haut à gauche pour vérifier que la mise à jour est bien chargée.
 
-## Installation
+## Déploiement GitHub Pages
 
-Remplace les fichiers de ton dépôt GitHub Pages par ceux de ce dossier, puis fais `Commit changes`.
+Uploader le contenu de ce dossier à la racine du dépôt GitHub Pages :
 
-Sur l'iPad, ouvre l'adresse avec `?v=17` pour éviter le cache, par exemple :
+- index.html
+- style.css
+- app.js
+- manifest.json
+- sw.js
+- .nojekyll
+- icons/
 
-```text
-https://tonpseudo.github.io/velofit-ipad/?v=17
-```
+Puis vérifier Settings > Pages > main / root.
 
-Si l'ancienne version reste affichée, supprime l'icône de l'écran d'accueil et ajoute-la de nouveau depuis Safari.
+Après le déploiement, ouvrir l'URL donnée par GitHub Pages.

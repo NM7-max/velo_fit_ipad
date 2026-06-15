@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="VeloFit" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json?v=18" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <title>VeloFit - iPad</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=18" />
 </head>
 <body>
   <main class="app">
@@ -68,12 +68,13 @@
       </div>
 
       <strong id="stateText" class="state-text">En attente</strong>
-      <p id="message" class="message">Version iPad complémentaire. MediaPipe se charge automatiquement au lancement de la caméra ou de la vidéo.</p>
+      <p id="message" class="message">Version iPad complémentaire v18. MediaPipe se charge automatiquement au lancement de la caméra ou de la vidéo.</p>
     </section>
 
+    <div id="versionBadge" class="version-badge" title="Version de test">2</div>
     <div id="statusPill" class="status-pill">Prêt</div>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=18"></script>
 </body>
 </html>
