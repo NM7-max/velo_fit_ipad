@@ -108,27 +108,37 @@ h1 {
   position: relative;
   flex: 0 0 auto;
   width: 100%;
-  height: min(56vh, 520px);
-  min-height: 330px;
-  max-height: 520px;
-  aspect-ratio: 16 / 9;
+  height: min(44vh, 430px);
+  min-height: 300px;
+  max-height: 430px;
   border-radius: 18px;
   background: var(--panel2);
   border: 2px solid var(--border);
   overflow: hidden;
-  display: grid;
-  place-items: center;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
 }
 
-#sourceVideo { display: none; }
-
-#outputCanvas {
-  display: block;
+/* v19 : la vidéo est visible et reste toujours contenue dans le cadre.
+   Le canvas sert seulement d'overlay pour les lignes/points MediaPipe. */
+#sourceVideo {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #05070c;
+  display: block;
+}
+
+#outputCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  background: transparent;
+  z-index: 2;
 }
 
 .drop-label {
@@ -141,6 +151,8 @@ h1 {
   padding: 24px;
   color: #d7e2ef;
   pointer-events: none;
+  background: var(--panel2);
+  z-index: 3;
 }
 
 .drop-label strong {
@@ -173,9 +185,7 @@ h1 {
   place-items: center;
 }
 
-.info-label {
-  display: none;
-}
+.info-label { display: none; }
 
 .info-block strong {
   font-size: clamp(24px, 4vw, 34px);
@@ -215,25 +225,6 @@ h1 {
   font-size: 12px;
 }
 
-@media (max-width: 900px) {
-  .controls {
-    flex-wrap: wrap;
-  }
-  .velo-btn, .select-box {
-    flex: 1 1 auto;
-  }
-}
-
-@media (orientation: portrait) {
-  .viewer {
-    height: min(46vh, 430px);
-    min-height: 280px;
-    max-height: 430px;
-  }
-  .info-row { grid-template-columns: 1fr; }
-}
-
-
 .version-badge {
   position: absolute;
   top: max(12px, env(safe-area-inset-top));
@@ -251,4 +242,18 @@ h1 {
   font-weight: 900;
   z-index: 50;
   box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+
+@media (max-width: 900px) {
+  .controls { flex-wrap: wrap; }
+  .velo-btn, .select-box { flex: 1 1 auto; }
+}
+
+@media (orientation: portrait) {
+  .viewer {
+    height: min(44vh, 410px);
+    min-height: 260px;
+    max-height: 410px;
+  }
+  .info-row { grid-template-columns: 1fr; }
 }

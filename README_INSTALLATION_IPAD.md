@@ -1,4 +1,4 @@
-# VeloFit iPad PWA v18
+# VeloFit iPad PWA v19
 
 Version avec badge jaune `2` visible en haut à gauche pour vérifier que la mise à jour est bien chargée.
 

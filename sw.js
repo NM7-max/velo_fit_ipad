@@ -1,4 +1,4 @@
-const CACHE_NAME = "velofit-ipad-v18";
+const CACHE_NAME = "velofit-ipad-v19";
 const ASSETS = [
   "./",
   "./index.html",
