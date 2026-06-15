@@ -152,6 +152,7 @@ function stopCurrent(options = {}) {
 
   video.removeAttribute("src");
   video.load();
+  resizeOverlayCanvas();
 
   mode = "stop";
   dropLabel.style.display = "grid";
@@ -294,25 +295,44 @@ async function startSelectedVideo() {
   }
 }
 
-function resizeCanvasToVideo() {
-  const w = video.videoWidth || 1280;
-  const h = video.videoHeight || 720;
+function resizeOverlayCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.max(1, Math.round(rect.width * dpr));
+  const h = Math.max(1, Math.round(rect.height * dpr));
 
   if (canvas.width !== w || canvas.height !== h) {
     canvas.width = w;
     canvas.height = h;
   }
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, rect.width, rect.height);
 }
 
-function drawVideoFrame() {
-  resizeCanvasToVideo();
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+function getVideoDisplayRect() {
+  const box = canvas.getBoundingClientRect();
+  const boxW = box.width || 1;
+  const boxH = box.height || 1;
+  const videoW = video.videoWidth || 16;
+  const videoH = video.videoHeight || 9;
+  const scale = Math.min(boxW / videoW, boxH / videoH);
+  const drawW = videoW * scale;
+  const drawH = videoH * scale;
+
+  return {
+    x: (boxW - drawW) / 2,
+    y: (boxH - drawH) / 2,
+    width: drawW,
+    height: drawH
+  };
 }
 
 function toCanvasPoint(lm) {
+  const r = getVideoDisplayRect();
   return {
-    x: lm.x * canvas.width,
-    y: lm.y * canvas.height,
+    x: r.x + lm.x * r.width,
+    y: r.y + lm.y * r.height,
     v: lm.visibility ?? 1
   };
 }
@@ -580,7 +600,7 @@ function loop(now) {
   if (!running || !poseLandmarker) return;
 
   if (video.readyState >= 2 && video.videoWidth > 0) {
-    drawVideoFrame();
+    resizeOverlayCanvas();
     analyseCurrentFrame(now);
     drawSavedAnalysis();
   }
