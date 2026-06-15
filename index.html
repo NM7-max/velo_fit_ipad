@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="VeloFit" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>VeloFit - iPad</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <h1>VeloFit - angle du genou</h1>
+
+    <section class="controls" aria-label="Contrôles">
+      <button id="btnCamera" class="velo-btn">Lancer caméra</button>
+
+      <label class="select-box camera-box">
+        <span>Caméra</span>
+        <select id="cameraChoice">
+          <option value="environment">0 - arrière</option>
+          <option value="user">1 - avant</option>
+        </select>
+      </label>
+
+      <label class="velo-btn file-btn">
+        Choisir vidéo
+        <input id="videoFile" type="file" accept="video/*,video/mp4,video/quicktime,.mp4,.mov,.m4v" />
+      </label>
+
+      <button id="btnVideo" class="velo-btn green">Lancer vidéo sélectionnée</button>
+
+      <label class="select-box speed-box">
+        <span>Vitesse</span>
+        <select id="speedChoice">
+          <option value="1">1</option>
+          <option value="0.5">0.5</option>
+          <option value="0.25">0.25</option>
+        </select>
+      </label>
+
+      <button id="btnStop" class="velo-btn red">Stop</button>
+    </section>
+
+    <section class="viewer" aria-label="Zone vidéo">
+      <video id="sourceVideo" playsinline muted preload="metadata"></video>
+      <canvas id="outputCanvas"></canvas>
+      <div id="dropLabel" class="drop-label">
+        <strong>Choisis une vidéo ou lance la caméra</strong>
+        <span>Sur iPad : bouton “Choisir vidéo”, puis “Lancer vidéo sélectionnée”.</span>
+      </div>
+    </section>
+
+    <section class="info-panel">
+      <div class="info-row">
+        <div class="info-block">
+          <span class="info-label">Angle</span>
+          <strong id="angleText">Angle : --°</strong>
+        </div>
+        <div class="info-block colored">
+          <span class="info-label">Maximum</span>
+          <strong id="maxText">Max tour : --°</strong>
+        </div>
+      </div>
+
+      <strong id="stateText" class="state-text">En attente</strong>
+      <p id="message" class="message">Version iPad complémentaire. MediaPipe se charge automatiquement au lancement de la caméra ou de la vidéo.</p>
+    </section>
+
+    <div id="statusPill" class="status-pill">Prêt</div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
