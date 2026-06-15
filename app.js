@@ -3,9 +3,8 @@ import {
   PoseLandmarker
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
 
-// Modèle plus stable que la version Lite utilisée avant.
-// Il peut être un peu plus lourd, mais il donne généralement moins de points erratiques.
-const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task";
+// Modèle Lite : beaucoup plus rapide sur iPad, donc moins de retard à l'affichage.
+const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task";
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm";
 
 const SEUIL_VISIBILITE = 0.45;
@@ -15,9 +14,10 @@ const MARGE_PROCHE = 5;
 const DESCENTE_APRES_MAX = 6;
 const FRAMES_CONFIRMATION_MAX = 3;
 const REMONTEE_NOUVEAU_TOUR = 10;
-const DETECTION_INTERVAL_MS = 70;
-const ALPHA_POINTS = 0.45;
-const ALPHA_ANGLE = 0.35;
+const DETECTION_INTERVAL_MS = 33;
+// Valeurs plus hautes = suit plus vite le mouvement, moins de retard.
+const ALPHA_POINTS = 0.78;
+const ALPHA_ANGLE = 0.72;
 
 const COLORS = {
   good: "#28e06d",
@@ -102,24 +102,35 @@ async function initPose() {
   if (poseLandmarker) return;
 
   setStatus("Chargement");
-  setMessage("Chargement de MediaPipe. Cela peut prendre quelques secondes...");
+  setMessage("Chargement de MediaPipe rapide. Cela peut prendre quelques secondes...");
 
   const vision = await FilesetResolver.forVisionTasks(WASM_URL);
-  poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
-    baseOptions: {
-      modelAssetPath: MODEL_URL,
-      // CPU est souvent plus stable sur Safari/iPad que GPU pour ce type de PWA.
-      delegate: "CPU"
-    },
-    runningMode: "VIDEO",
-    numPoses: 1,
-    minPoseDetectionConfidence: 0.55,
-    minPosePresenceConfidence: 0.55,
-    minTrackingConfidence: 0.55
-  });
+
+  async function createWithDelegate(delegate) {
+    return await PoseLandmarker.createFromOptions(vision, {
+      baseOptions: {
+        modelAssetPath: MODEL_URL,
+        delegate
+      },
+      runningMode: "VIDEO",
+      numPoses: 1,
+      minPoseDetectionConfidence: 0.45,
+      minPosePresenceConfidence: 0.45,
+      minTrackingConfidence: 0.45
+    });
+  }
+
+  try {
+    // GPU quand Safari/iPad l'accepte : nettement moins de retard.
+    poseLandmarker = await createWithDelegate("GPU");
+    setMessage("MediaPipe est chargé en mode rapide GPU.");
+  } catch (err) {
+    // Fallback si GPU n'est pas accepté.
+    poseLandmarker = await createWithDelegate("CPU");
+    setMessage("MediaPipe est chargé en mode CPU.");
+  }
 
   setStatus("Prêt");
-  setMessage("MediaPipe est chargé.");
 }
 
 function stopCurrent(options = {}) {
@@ -156,8 +167,8 @@ async function openCameraStream(facingMode) {
     audio: false,
     video: {
       facingMode: { exact: facingMode },
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
+      width: { ideal: 960 },
+      height: { ideal: 540 }
     }
   };
 
@@ -169,8 +180,8 @@ async function openCameraStream(facingMode) {
       audio: false,
       video: {
         facingMode: { ideal: facingMode },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
+        width: { ideal: 960 },
+        height: { ideal: 540 }
       }
     });
   }
